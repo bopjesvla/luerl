@@ -73,7 +73,6 @@
 %% probably be better to use bags and acces with match/select.
 
 %% Set which table store to use.
--define(TS_USE_ARRAY, true).
 
 -ifdef(TS_USE_ORDDICT).
 %% Using orddict to handle tables.
@@ -86,7 +85,10 @@
 -define(FOLD_TABLES(Fun, Acc, Ts), orddict:fold(Fun, Acc, Ts)).
 -endif.
 
--ifdef(TS_USE_ARRAY).
+%% Default
+-ifndef(TS_USE_ORDDICT).
+-ifndef(TS_USE_PD).
+-ifndef(TS_USE_ETS).
 %% Use arrays to handle tables.
 -define(MAKE_TABLE(), array:new()).
 -define(GET_TABLE(N, Ar), array:get(N, Ar)).
@@ -105,6 +107,8 @@
 		  array:sparse_map(___Fil, Ar)
 	  end)(array:default(Ar)))).
 -define(FOLD_TABLES(Fun, Acc, Ar), array:sparse_foldl(Fun, Acc, Ar)).
+-endif.
+-endif.
 -endif.
 
 -ifdef(TS_USE_PD).
